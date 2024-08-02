@@ -1,5 +1,5 @@
 :root {
-  --redux-color: #764abc;
+  --redux-color: #3160a1;
 }
 
 body {
@@ -33,7 +33,7 @@ p {
 
 nav {
   display: flex;
-  padding: 0;
+  padding: 20px;
   background: var(--redux-color);
 }
 
@@ -46,7 +46,7 @@ nav section h1 {
 }
 
 section h2 {
-  margin: 0.5rem 0;
+  margin: 1.5rem 0;
 }
 
 nav section h1,

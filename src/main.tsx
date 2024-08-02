@@ -1,7 +1,9 @@
 import React from 'react'
+import { Provider } from 'react-redux'
 import { createRoot } from 'react-dom/client'
 
 import App from './App'
+import {store} from "./app/store"
 
 import { worker } from './api/server'
 
@@ -17,7 +19,9 @@ async function start() {
 
   root.render(
     <React.StrictMode>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </React.StrictMode>,
   )
 }
