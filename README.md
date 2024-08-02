@@ -1,10 +1,10 @@
-# Simple Redux blog  2512
+# Simple Redux blog
 
-A quick blog to learn the fundamentals of Redux, based on the official Redux Essentials tutorial.
+A quick CRUD blog to learn the fundamentals of Redux, based on the official Redux Essentials tutorial.
 
 ## Features
 
-1. Basic blog structure with posts and comments
+1. Full CRUD across posts
 2. State management using Redux
 
 ## Getting Started
@@ -12,13 +12,13 @@ A quick blog to learn the fundamentals of Redux, based on the official Redux Ess
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/simple-redux-blog.git
+git clone https://github.com/your-username/Simple-Redux-Blog.git
 ```
 
 2. Install dependencies:
 
 ```bash
-cd simple-redux-blog
+cd Simple-Redux-Blog
 npm install
 ```
 

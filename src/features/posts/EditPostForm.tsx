@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { useAppSelector, useAppDispatch } from '@/app/hooks'
-import { postUpdated } from './postsSlice'
+import { postUpdated, selectPostById } from './postsSlice'
 
 interface EditPostFormFields extends HTMLFormControlsCollection {
   postTitle: HTMLInputElement
@@ -16,7 +16,7 @@ export const EditPostForm = () => {
   const { postId } = useParams()
 
   // find our post in the store with our custom hook with type
-  const post = useAppSelector((state) => state.posts.find((post) => post.id === postId))
+  const post = useAppSelector((state) => selectPostById(state, postId!))
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
