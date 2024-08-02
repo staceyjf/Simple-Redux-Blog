@@ -1,7 +1,5 @@
 import { parseISO, formatDistanceToNow } from 'date-fns'
 
-
-
 interface TimeAgoProps {
   timestamp: string
 }
