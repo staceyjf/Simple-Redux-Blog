@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { useAppSelector, useAppDispatch } from '@/app/hooks'
 import { postUpdated, selectPostById } from './postsSlice'
+import { PostAuthor } from './PostAuthor'
 
 interface EditPostFormFields extends HTMLFormControlsCollection {
   postTitle: HTMLInputElement
@@ -37,7 +38,7 @@ export const EditPostForm = () => {
     const content = elements.postContent.value
 
     if (title && content) {
-      dispatch(postUpdated({ id: post.id, title, content })) //update the store 
+      dispatch(postUpdated({ id: post.id, title, content })) //update the store
       navigate(`/posts/${postId}`)
     }
   }
@@ -50,6 +51,7 @@ export const EditPostForm = () => {
         <input type="text" id="postTitle" name="postTitle" defaultValue={post.title} required />
         <label htmlFor="postContent">Content:</label>
         <textarea id="postContent" name="postContent" defaultValue={post.content} required />
+        <PostAuthor userId={post.user} />
 
         <button>Save Post</button>
       </form>

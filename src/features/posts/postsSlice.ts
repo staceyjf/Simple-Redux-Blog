@@ -1,16 +1,29 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
+import { sub } from 'date-fns'
 
 export interface Post {
   id: string
   title: string
   content: string
+  user: string
+  date: string // Redux actions can only take plain JS objects
 }
 
-// Create an initial state value
+// Pick is a way of creating a new type by selecting properties from
+// an existing type eg we can exclude user from post in our new type
+// Pick<Type, Keys>
+type PostUpdate = Pick<Post, 'id' | 'title' | 'content'>
+
 const initialState: Post[] = [
-  { id: '1', title: 'First Post!', content: 'Hello!' },
-  { id: '2', title: 'Second Post', content: 'More interesting things about me' },
+  { id: '1', title: 'First Post!', content: 'Hello!', date: sub(new Date(), { minutes: 10 }).toISOString(), user: '0' },
+  {
+    id: '2',
+    title: 'Second Post',
+    content: 'More text',
+    date: sub(new Date(), { minutes: 10 }).toISOString(),
+    user: '2',
+  },
 ]
 
 // Create the slice and pass in the initial state
@@ -25,13 +38,13 @@ const postsSlice = createSlice({
       reducer(state, action: PayloadAction<Post>) {
         state.push(action.payload)
       },
-      prepare(title: string, content: string) {
+      prepare(title: string, content: string, userId: string) {
         return {
-          payload: { id: nanoid(), title, content },
+          payload: { id: nanoid(), date: new Date().toISOString(), title, content, user: userId },
         }
       },
     },
-    postUpdated(state, action: PayloadAction<Post>) {
+    postUpdated(state, action: PayloadAction<PostUpdate>) {
       const { id, title, content } = action.payload
       const existingPost = state.find((post) => post.id === id)
       if (existingPost) {
