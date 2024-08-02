@@ -1,5 +1,5 @@
 :root {
-  --redux-color: #3160a1;
+  --redux-color: #183059;
 }
 
 body {
@@ -60,7 +60,7 @@ nav a:active {
   padding: 0.1rem 1rem;
   border-radius: 4px;
   color: white !important;
-  background: #481499;
+  background: #AF5B5B;
   display: flex;
   align-items: center;
 }
@@ -71,15 +71,13 @@ nav a:active {
   }
 }
 
-
-
 nav a:first-of-type {
   margin-left: -1.5rem;
 }
 
 nav a:hover {
   color: white;
-  background: #926bcf;
+  background: #F03A47;
 }
 
 .navContent {
@@ -137,9 +135,7 @@ section {
   section h1 {
     font-size: 3rem;
   }
-  
 }
-
 
 /* Posts list */
 
@@ -173,7 +169,7 @@ p.post-content {
 
 .button {
   display: inline-block;
-  background: #1976d2;
+  background: #f03a47;
   color: white;
   border-radius: 4px;
   font-weight: 700;

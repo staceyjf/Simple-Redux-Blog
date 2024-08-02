@@ -4,6 +4,7 @@ import { useAppSelector } from '@/app/hooks'
 import { selectPostById } from './postsSlice'
 import { PostAuthor } from './PostAuthor'
 import { ReactionButtons } from './ReactionButtons'
+import { selectCurrentUser, selectUserById } from '../users/userSlice'
 
 export const SinglePostPage = () => {
   const { postId } = useParams()
@@ -11,6 +12,7 @@ export const SinglePostPage = () => {
   // ! is the non-null operator and it tells TS that it is def not null
   // even if TS can't infer a data type
   const post = useAppSelector((state) => selectPostById(state, postId!))
+  const currentUsername = useAppSelector(selectCurrentUser)
 
   if (!post) {
     return (
@@ -20,6 +22,10 @@ export const SinglePostPage = () => {
     )
   }
 
+  const postUser = useAppSelector((state) => selectUserById(state, post.user))
+
+  const canEdit = currentUsername === postUser
+
   return (
     <section>
       <article className="post">
@@ -27,9 +33,11 @@ export const SinglePostPage = () => {
         <p className="post-content">{post.content}</p>
         <PostAuthor userId={post.user} />
         <ReactionButtons post={post} />
-        <Link to={`/editPost/${post.id}`} className="button">
-          Edit Post
-        </Link>
+        {canEdit && (
+          <Link to={`/editPost/${post.id}`} className="button">
+            Edit Post
+          </Link>
+        )}
       </article>
     </section>
   )
