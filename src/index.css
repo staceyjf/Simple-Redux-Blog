@@ -33,7 +33,7 @@ p {
 
 nav {
   display: flex;
-  padding: 20px;
+  padding: 50px;
   background: var(--redux-color);
 }
 
@@ -60,7 +60,7 @@ nav a:active {
   padding: 0.1rem 1rem;
   border-radius: 4px;
   color: white !important;
-  background: #AF5B5B;
+  background: #af5b5b;
   display: flex;
   align-items: center;
 }
@@ -77,10 +77,11 @@ nav a:first-of-type {
 
 nav a:hover {
   color: white;
-  background: #F03A47;
+  background: #f03a47;
 }
 
 .navContent {
+  margin-top: 3rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

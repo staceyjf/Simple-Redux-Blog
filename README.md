@@ -1,11 +1,15 @@
 # Simple Redux blog
 
-A quick CRUD blog to learn the fundamentals of Redux, based on the official Redux Essentials tutorial.
+A quick blog to learn the fundamentals of Redux, based on the official Redux Essentials tutorial.
+
+<img src="public/randon-thoughts-homepage.png" alt="Random Thoughts Homepage">
 
 ## Features
 
-1. Full CRUD across posts
-2. State management using Redux
+1. Full read and edit across posts
+2. State management for posts, users and auth
+3. Reaction buttons on posts for user engagement
+4. Simple log in form protected via protected routes
 
 ## Getting Started
 
