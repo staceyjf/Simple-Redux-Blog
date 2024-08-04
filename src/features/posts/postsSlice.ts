@@ -1,15 +1,10 @@
-import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { client } from '@/api/client'
-import { userLoggedOut } from '../auth/authSlice'
 
 import type { RootState } from '@/app/store'
 import { createAppAsyncThunk } from '@/app/withTypes'
 
-// typically use async/await instead of .then()
-export const fetchPosts = createAppAsyncThunk('posts/fetchPosts', async () => {
-  const response = await client.get<Post[]>('/fakeApi/posts')
-  return response.data
-})
+import { userLoggedOut } from '@/features/auth/authSlice'
 
 export interface Reactions {
   thumbsUp: number
@@ -19,7 +14,6 @@ export interface Reactions {
   eyes: number
 }
 
-// allows us to use type :ReacttionName eg reaction = "thumbsUp"
 export type ReactionName = keyof Reactions
 
 export interface Post {
@@ -27,28 +21,39 @@ export interface Post {
   title: string
   content: string
   user: string
-  date: string // Redux actions can only take plain JS objects
+  date: string
   reactions: Reactions
 }
 
-// Pick is a way of creating a new type by selecting properties from
-// an existing type eg we can exclude user from post in our new type
-// Pick<Type, Keys>
 type PostUpdate = Pick<Post, 'id' | 'title' | 'content'>
-
-const initialReactions: Reactions = {
-  thumbsUp: 0,
-  tada: 0,
-  heart: 0,
-  rocket: 0,
-  eyes: 0,
-}
+type NewPost = Pick<Post, 'title' | 'content' | 'user'>
 
 interface PostsState {
   posts: Post[]
-  status: 'idle' | 'pending' | 'succeeded' | 'failed'
+  status: 'idle' | 'pending' | 'succeeded' | 'rejected'
   error: string | null
 }
+
+export const fetchPosts = createAppAsyncThunk(
+  'posts/fetchPosts',
+  async () => {
+    const response = await client.get<Post[]>('/fakeApi/posts')
+    return response.data
+  },
+  {
+    condition(arg, thunkApi) {
+      const postsStatus = selectPostsStatus(thunkApi.getState())
+      if (postsStatus !== 'idle') {
+        return false
+      }
+    },
+  },
+)
+
+export const addNewPost = createAppAsyncThunk('posts/addNewPost', async (initialPost: NewPost) => {
+  const response = await client.post<Post>('/fakeApi/posts', initialPost)
+  return response.data
+})
 
 const initialState: PostsState = {
   posts: [],
@@ -56,31 +61,10 @@ const initialState: PostsState = {
   error: null,
 }
 
-// Create the slice and pass in the initial state
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    // Declare a "case reducer" named `postAdded`.
-    // The type of `action.payload` will be a `Post` object.
-    // prepare customises the creation of the action.payload
-    postAdded: {
-      reducer(state, action: PayloadAction<Post>) {
-        state.posts.push(action.payload)
-      },
-      prepare(title: string, content: string, userId: string) {
-        return {
-          payload: {
-            id: nanoid(),
-            date: new Date().toISOString(),
-            title,
-            content,
-            user: userId,
-            reactions: initialReactions,
-          },
-        }
-      },
-    },
     postUpdated(state, action: PayloadAction<PostUpdate>) {
       const { id, title, content } = action.payload
       const existingPost = state.posts.find((post) => post.id === id)
@@ -102,30 +86,29 @@ const postsSlice = createSlice({
       .addCase(userLoggedOut, (state) => {
         // Clear out the list of posts whenever the user logs out
         return initialState
-      }) // this is like our isLoading 
-      // we listen for the action types eg pending dispatched by
-      // fetchPosts thunk
+      })
       .addCase(fetchPosts.pending, (state, action) => {
         state.status = 'pending'
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = 'succeeded'
-        // Add any fetched posts to the array
-        state.posts.push(...action.payload)
+        // Save the fetched posts into state
+        state.posts = action.payload
       })
       .addCase(fetchPosts.rejected, (state, action) => {
-        state.status = 'failed'
+        state.status = 'rejected'
         state.error = action.error.message ?? 'Unknown Error'
+      })
+      .addCase(addNewPost.fulfilled, (state, action) => {
+        state.posts.push(action.payload)
       })
   },
 })
 
-// Export the auto-generated action creator with the same name
-export const { postAdded, postUpdated, reactionAdded } = postsSlice.actions
+export const { postUpdated, reactionAdded } = postsSlice.actions
 
 export default postsSlice.reducer
 
-// Selector functions for DRY code
 export const selectAllPosts = (state: RootState) => state.posts.posts
 
 export const selectPostById = (state: RootState, postId: string) => state.posts.posts.find((post) => post.id === postId)
